@@ -16,6 +16,7 @@ from maskrcnn_benchmark.utils.collect_env import collect_env_info
 from maskrcnn_benchmark.utils.comm import synchronize, get_rank
 from maskrcnn_benchmark.utils.logger import setup_logger
 from maskrcnn_benchmark.utils.miscellaneous import mkdir
+from maskrcnn_benchmark.utils.distributed import dist_init
 
 
 def main():
@@ -26,7 +27,7 @@ def main():
         metavar="FILE",
         help="path to config file",
     )
-    parser.add_argument("--local_rank", type=int, default=0)
+    parser.add_argument("--port", type=str, required=True)
     parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
@@ -36,14 +37,11 @@ def main():
 
     args = parser.parse_args()
 
-    num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
+    num_gpus = int(os.environ.get('SLURM_NTASKS', 1))
     distributed = num_gpus > 1
 
     if distributed:
-        torch.cuda.set_device(args.local_rank)
-        torch.distributed.init_process_group(
-            backend="nccl", init_method="env://"
-        )
+        dist_init(args.port)
 
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)

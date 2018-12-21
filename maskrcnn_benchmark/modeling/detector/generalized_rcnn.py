@@ -11,6 +11,7 @@ from maskrcnn_benchmark.structures.image_list import to_image_list
 from ..backbone import build_backbone
 from ..rpn.rpn import build_rpn
 from ..roi_heads.roi_heads import build_roi_heads
+from ...quant.utils import enable_quant_conv
 
 
 class GeneralizedRCNN(nn.Module):
@@ -29,6 +30,9 @@ class GeneralizedRCNN(nn.Module):
         self.backbone = build_backbone(cfg)
         self.rpn = build_rpn(cfg)
         self.roi_heads = build_roi_heads(cfg)
+
+        if cfg.MODEL.ENABLE_QUANT:
+            enable_quant_conv(cfg.MODEL.QUANT_BIT_WIDTH)
 
     def forward(self, images, targets=None):
         """

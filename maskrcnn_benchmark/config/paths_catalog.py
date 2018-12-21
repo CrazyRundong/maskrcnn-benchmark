@@ -5,7 +5,7 @@ import os
 
 
 class DatasetCatalog(object):
-    DATA_DIR = "datasets"
+    DATA_DIR = "/mnt/lustre/share/DSK/datasets"
     DATASETS = {
         "coco_2014_train": {
             "img_dir": "coco/train2014",
@@ -22,6 +22,15 @@ class DatasetCatalog(object):
         "coco_2014_valminusminival": {
             "img_dir": "coco/val2014",
             "ann_file": "coco/annotations/instances_valminusminival2014.json"
+        },
+        # COCO 2017
+        "coco_2017_train": {
+            "img_dir": "mscoco2017/train2017",
+            "ann_file": "mscoco2017/annotations/instances_train2017.json"
+        },
+        "coco_2017_val": {
+            "img_dir": "mscoco2017/val2017",
+            "ann_file": "mscoco2017/annotations/instances_val2017.json"
         },
         "voc_2007_train": {
             "data_dir": "voc/VOC2007",
